@@ -1,0 +1,23 @@
+{
+    "in_process_packages":
+    [
+    ],
+    "installed_packages":
+    [
+        "CoffeeCompile",
+        "CoffeeScript",
+        "Emmet",
+        "GitGutter",
+        "Handlebars",
+        "INI",
+        "LESS",
+        "Local History",
+        "Mako",
+        "nginx",
+        "Package Control",
+        "Python Flake8 Lint",
+        "Sass",
+        "SublimeCodeIntel",
+        "SublimeLinter"
+    ]
+}

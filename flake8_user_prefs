@@ -1,0 +1,16 @@
+{
+   // show a mark in the gutter on all lines with errors/warnings:
+   // - "dot", "circle" or "bookmark" to show marks
+   // - "" (empty string) to do not show marks
+   "gutter_marks": "bookmark",
+
+   // turn off complexity check (set number > 0 to check complexity level)
+   "complexity": -1,
+
+   // set desired max line length
+   "pep8_max_line_length": 79,
+
+   // skip errors and warnings (e.g. ["E303", E4", "W"])
+   "ignore": ["E303", "W391", "N802", "N806"],
+
+}
