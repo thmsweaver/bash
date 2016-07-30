@@ -1,4 +1,5 @@
 source ~/.bashrc
+
 #  _               _                        __ _ _
 # | |__   __ _ ___| |__    _ __  _ __ ___  / _(_) | ___
 # | '_ \ / _` / __| '_ \  | '_ \| '__/ _ \| |_| | |/ _ \
@@ -6,57 +7,33 @@ source ~/.bashrc
 # |_.__/ \__,_|___/_| |_| | .__/|_|  \___/|_| |_|_|\___|
 #                         |_|
 #
-# ====================
-# File Navigation
-# ====================
-# LS lists information about files. -F includes a slash for directories.
 alias ls='ls -F'
-# long list format including hidden files
 alias la='ls -la'
-# prompt before removing!
 alias rm="rm -i"
-# Adds colors to LS
-export CLICOLOR=1
-# http://geoff.greer.fm/lscolors/
-# Describes what color to use for which attribute (files, folders etc.)
-export LSCOLORS=faexcxdxbxegedabagacad # PJ: turned off
-# go back one directory
 alias b='cd ../'
-# If we make a change to our bash profile we need to reload it
 alias reload="clear; source ~/.bash_profile"
+
+export CLICOLOR=1
+export LSCOLORS=exfxcxdxbxegedabagacad # http://geoff.greer.fm/lscolors/
+
 ## Tab improvements
-## Might not need?
-# bind 'set completion-ignore-case on'
-# make completions appear immediately after pressing TAB once
-# bind 'set show-all-if-ambiguous on'
-# bind 'TAB: menu-complete'
-# Prefer US English
+bind 'set completion-ignore-case on'
+bind 'TAB: menu-complete'
+
 export LC_ALL="en_US.UTF-8"
-# use UTF-8
 export LANG="en_US"
 
-# =================
-# History
-# =================
-# History lists your previously entered commands
 alias h='history'
 # http://jorge.fbarr.net/2011/03/24/making-your-bash-history-more-efficient/
-# Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=32768
 export HISTFILESIZE=$HISTSIZE
 # don't put duplicate lines in the history.
 export HISTCONTROL=ignoredups
-# ignore same sucessive entries.
+# ignore same successive entries.
 export HISTCONTROL=ignoreboth
 # Make some commands not show up in history
-export HISTIGNORE="h:ls:ls *:ll:ll *:"
+export HISTIGNORE="h:ls:ll:ll *:"
 
-# =================
-# Bash Prompt
-# =================
-# --------------------
-# Colors for the prompt
-# --------------------
 # Set the TERM var to xterm-256color
 if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
   export TERM=gnome-256color
@@ -76,17 +53,7 @@ if tput setaf 1 &> /dev/null; then
     CYAN=$(tput setaf 6)
     WHITE=$(tput setaf 7)
     ORANGE=$(tput setaf 172)
-    # GREEN=$(tput setaf 190)
     PURPLE=$(tput setaf 141)
-    BG_BLACK=$(tput setab 0)
-    BG_RED=$(tput setab 1)
-    BG_GREEN=$(tput setab 2)
-    BG_BLUE=$(tput setab 4)
-    BG_MAGENTA=$(tput setab 5)
-    BG_CYAN=$(tput setab 6)
-    BG_YELLOW=$(tput setab 226)
-    BG_ORANGE=$(tput setab 172)
-    BG_WHITE=$(tput setab 7)
   else
     MAGENTA=$(tput setaf 5)
     ORANGE=$(tput setaf 4)
@@ -95,8 +62,8 @@ if tput setaf 1 &> /dev/null; then
     WHITE=$(tput setaf 7)
   fi
   BOLD=$(tput bold)
-  RESET=$(tput sgr0)
-  UNDERLINE=$(tput sgr 0 1)
+  R=$(tput sgr0)
+  UL=$(tput sgr 0 1)
 else
   BLACK="\[\e[0;30m\]"
   RED="\033[1;31m"
@@ -108,48 +75,16 @@ else
   CYAN="\[\e[0;36m\]"
   BLUE="\[\e[0;34m\]"
   BOLD=""
-  RESET="\033[m"
+  R="\033[m"
 fi
-# ---------------------
-# Print Stats on terminal load
-# ---------------------
-function welcome() {
-  sed -i.bak s/welcome_prompt=false/welcome_prompt=true/g ~/.welcome_prompt
-  echo "Message returned."
-}
 
-# Show/Hide stats on terminal load
-function unwelcome() {
-  sed -i.bak s/welcome_prompt=true/welcome_prompt=false/g ~/.welcome_prompt
-  echo "Message removed. Type ${BOLD}welcome${RESET} to return the message."
-}
-
-# ---------------------
-# style the prompt
-# ---------------------
-style_user="\[${RESET}${WHITE}\]"
-style_path="\[${RESET}${CYAN}\]"
-style_chars="\[${RESET}${WHITE}\]"
-style_branch="${RED}"
-# ---------------------
-# Build the prompt
-# ---------------------
-# Example with committed changes: username ~/documents/GA/wdi on master[+]
-PS1="${style_user}\u"                    # Username
-PS1+="${style_path} \w"                  # Working directory
-PS1+="\$(prompt_git)"                    # Git details
-PS1+="\n"                                # Newline
-PS1+="${style_chars}\$ \[${RESET}\]"     # $ (and reset color)
-
-# =================
-# Other System Settings
-# =================
 # Hide/show all desktop icons (useful when presenting)
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 # Hide/show hidden files in Finder
 alias hidefiles="defaults write com.apple.finder AppleShowAllFiles FALSE && killall Finder"
 alias showfiles="defaults write com.apple.finder AppleShowAllFiles TRUE && killall Finder"
+
 # Start an HTTP server from a directory, optionally specifying the port
 function server() {
   local port="${1:-8000}"
@@ -158,36 +93,75 @@ function server() {
   # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
   python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
 }
-# List any open internet sockets on port 3000. Useful if a rogue server is running
+
+# List any open internet sockets on port 3000.
+# Useful if a rogue server is running
 # http://www.akadia.com/services/lsof_intro.html
 alias rogue='lsof -i TCP:3000'
 
+alias fuck_deps='npm prune && npm install && npm update && bower prune && bower install && bower update'
+
 # APPLICATION SETTINGS
 ##########################################################################
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+fi
 
-# ================
-# Application Aliases
-# ================
-
-# Sublime should be symlinked. Otherwise use one of these
-# alias subl='open -a "Sublime Text"'
-alias subl='open -a "Sublime Text 3"'
-
-alias mou='open -a "Mou"'
-alias hipchat='open -a "HipChat"'
-alias chrome='open -a "Google Chrome"'
-
-alias trvpy='cd ~/projects/trove-web; pserve --server-name proxy --reload development.ini'
-alias trvjs='cd ~/projects/trove-web; nvm use trove-web; gulp watch --sourcemap'
-
-# ================
-# Sublime
-# ================
 # Make sublime our editor of choice
 export EDITOR="subl -w"
 
-[[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
+export NVM_DIR="/Users/thomasweaver/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+function test_it() {
+  repo=${PWD##*/}
 
-export PS1='[\u: \W$(__git_ps1 " (on: %s)")]\$ '
+  if [ "$repo" = "advisor-service" ]; then
+    python_bin='venv/bin/python'
+    manage='advisor_project/manage.py'
+    service='advisor_service'
+  elif [ "$repo" = "pinterest-service" ]; then
+    python_bin='env/bin/python'
+    manage='test_project/manage.py'
+    service='pinterest_service'
+  else
+    echo "${RED}not implemented${R}"
+    return
+  fi
+
+  settings="$service.test_settings"
+  tests="$service.tests"
+  specific_tests_to_run=$1 
+  if [ $specific_tests_to_run ]; then
+    tests+=".$specific_tests_to_run"
+  fi
+
+  eval "$python_bin $manage test $tests --settings=$settings"
+}
+
+function cm() {
+  echo 'adding...'
+  eval 'git add .'
+
+  branch=$(__git_ps1 "%s")
+  jira_ticket="${branch#*/}"
+  message=$jira_ticket
+
+  if [ $# -ne 0 ]; then
+    message="$message $@"
+  fi
+
+  echo "commit message: $message"
+  read -s -n 1 key
+  if [ "$key" = '' ]; then
+    echo 'committing...'
+    eval "git commit -m '$message'"
+  else
+    echo 'aborting...'
+    return
+  fi
+}
+
+PS1='${BOLD}[${R} ${UL}\d${R}:'
+PS1+=' ${BOLD}${BLUE}\W${R}'
+PS1+='$(__git_ps1 " ${GREEN}*%s*${R}") ${BOLD}]${R} '
