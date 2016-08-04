@@ -139,6 +139,7 @@ function test_it() {
   eval "$python_bin $manage test $tests --settings=$settings"
 }
 
+# GITHUB UTILITY FUNCTIONS
 function cm() {
   echo 'adding...'
   eval 'git add .'
@@ -161,6 +162,12 @@ function cm() {
     return
   fi
 }
+
+function commits() {
+  current_branch=$(__git_ps1 "%s")
+  eval "git cherry -v develop $current_branch"
+}
+# GITHUB UTILITY FUNCTIONS
 
 PS1='${BOLD}[${R} ${UL}\d${R}:'
 PS1+=' ${BOLD}${BLUE}\W${R}'
